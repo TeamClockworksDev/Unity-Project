@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform  _gameBoardParent;
     
     [Header("Game Settings")]
-    [Range(4, 99)]
+    [Range(6, 33)]
     [SerializeField] private int _gridSize = 9;
     [SerializeField] private SpawnPosition _playerOneSpawnPosition = SpawnPosition.TopLeft;
     
@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
             }
             
             //Position Camera
-            _mainCameraRef.transform.position = new Vector3(_gridSize / 2.0f, 13.0f, _gridSize);
+            _mainCameraRef.transform.position = new Vector3(_gridSize / 2.0f, _gridSize * 1.5f, _gridSize * 1.01f);
             
             //Spawn & Position PLayer
             _playerOneGO  = _playerOneGO == null ? Instantiate(_playerPrefab, transform) : _playerOneGO;
