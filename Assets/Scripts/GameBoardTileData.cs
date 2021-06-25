@@ -16,6 +16,9 @@ public class GameBoardTileData : MonoBehaviour
     private Renderer _renderer;
     private GameObject _gameObjectRef;
 
+    private float colorLerpTime;
+    private float colorLerpDelay;
+
     private void Start()
     {
         Initialize();
@@ -40,7 +43,7 @@ public class GameBoardTileData : MonoBehaviour
         coordinatesY = y;
     }
 
-    private void SetColor(Color c)
+    public void SetColor(Color c)
     {
         if (_renderer != null)
         {
@@ -51,6 +54,34 @@ public class GameBoardTileData : MonoBehaviour
         {
             Debug.LogError("[GameBoardTileData] Tile " + gameObject.name + " - Failed to SetColor(" + c + ") - Renderer Reference Was Null!");
         }
+    }
+
+    public void LerpToColor(Color c, float lerpTime, float delay = 0.0f)
+    {
+        colorLerpTime = lerpTime;
+        colorLerpDelay = delay;
+        
+        StartCoroutine("LerpToNewColor", c);
+    }
+    
+    
+    private IEnumerator LerpToNewColor(Color endColor)
+    {
+        yield return new WaitForSecondsRealtime(colorLerpDelay);
+        
+        Color startColor = currentColor;
+        float elapsedTime = 0.0f;
+
+        while (elapsedTime <= colorLerpTime)
+        {
+            SetColor(Color.Lerp(startColor, endColor, elapsedTime / colorLerpTime));
+
+            elapsedTime += Time.deltaTime;
+            
+            yield return new WaitForEndOfFrame();
+        }
+
+        SetColor(endColor);
     }
 
 }

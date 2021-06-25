@@ -302,6 +302,7 @@ MonoBehaviour:
   _playerOneSpawnPosition: 0
   basicGridColor1: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   basicGridColor2: {r: 0, g: 0, b: 0, a: 1}
+  _colorChangeSpeed: 0.5
   _resetGameBoard: 0
 --- !u!4 &1528020080
 Transform:

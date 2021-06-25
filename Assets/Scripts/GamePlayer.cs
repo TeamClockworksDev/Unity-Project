@@ -4,6 +4,17 @@ using UnityEngine;
 
 public class GamePlayer : MonoBehaviour
 {
+    public enum FacingDirection
+    {
+        Up, Down, Left, Right
+    }
+
+    public Color playerColor = Color.white;
+
+    [Space]
+    
+    public FacingDirection facing = FacingDirection.Right;
+    
     public int positionX = -1;
     public int positionY = -1;
     
@@ -20,9 +31,15 @@ public class GamePlayer : MonoBehaviour
     [SerializeField] private KeyCode altMovementKeyRight = KeyCode.RightArrow;
     
     [Header("Action Keys")]
-    [SerializeField] private KeyCode actionKey = KeyCode.Z;
-    
-    
+    [SerializeField] private KeyCode actionKey1 = KeyCode.Z;
+    [SerializeField] private KeyCode actionKey2 = KeyCode.Space;
+
+    void Start()
+    {
+        // GetComponentInChildren<Renderer>().material.color = playerColor;
+        GetComponentInChildren<Light>().color = playerColor;
+    }
+
     void Update()
     {
         DetectMovement();
@@ -34,25 +51,25 @@ public class GamePlayer : MonoBehaviour
         int moveX = 0;
         int moveY = 0;
         
-        //Move Up
         if (Input.GetKeyDown(movementKeyUp) || Input.GetKeyDown(altMovementKeyUp))
         {
             moveY = -1;
+            SetRotation(FacingDirection.Up);
         }
-        //Move Down
         else if (Input.GetKeyDown(movementKeyDown) || Input.GetKeyDown(altMovementKeyDown))
         {
             moveY =  1;
+            SetRotation(FacingDirection.Down);
         }
-        //Move Left
         else if (Input.GetKeyDown(movementKeyLeft) || Input.GetKeyDown(altMovementKeyLeft))
         {
             moveX =  1;
+            SetRotation(FacingDirection.Left);
         }
-        //Move Right
         else if (Input.GetKeyDown(movementKeyRight) || Input.GetKeyDown(altMovementKeyRight))
         {
             moveX = -1;
+            SetRotation(FacingDirection.Right);
         }
 
         if (moveX == 0 && moveY == 0)
@@ -65,9 +82,9 @@ public class GamePlayer : MonoBehaviour
 
     private void DetectAction()
     {
-        if (Input.GetKeyDown(actionKey))
+        if (Input.GetKeyDown(actionKey1) || Input.GetKeyDown(actionKey2))
         {
-            //DO ACTION
+            GameManager.Instance.PlayerAction_ColorLine(facing, this);
         }
     }
 
@@ -77,5 +94,22 @@ public class GamePlayer : MonoBehaviour
         positionY = y;
         
         gameObject.transform.localPosition = new Vector3(x, 0.5f, y);
+    }
+
+    public void SetRotation(FacingDirection fDir)
+    {
+        float rotationNewY = 0.0f;
+        
+        switch (fDir)
+        {
+            case FacingDirection.Up   : rotationNewY = -90.0f; break;
+            case FacingDirection.Down : rotationNewY =  90.0f; break;
+            case FacingDirection.Left : rotationNewY = 180.0f; break;
+            case FacingDirection.Right: rotationNewY =   0.0f; break;
+        }
+
+        facing = fDir;
+        
+        transform.eulerAngles = new Vector3(0.0f, rotationNewY, 0.0f);
     }
 }

@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     
     public Color basicGridColor1 = Color.gray;
     public Color basicGridColor2 = Color.black;
+    
+    [SerializeField] private float _colorChangeSpeed = 1.5f;
 
     [Header("Dev Tools")]
     [SerializeField] private bool _resetGameBoard;
@@ -79,6 +81,8 @@ public class GameManager : MonoBehaviour
 
             _playerOneRef.SetPosition(spawnPlayerPosX, spawnPlayerPosY);
             
+            _playerOneRef.SetRotation(_playerOneSpawnPosition == SpawnPosition.BottomLeft || _playerOneSpawnPosition == SpawnPosition.TopLeft ? GamePlayer.FacingDirection.Right : GamePlayer.FacingDirection.Left);
+
             _playerOneGO.name = "Player One";
         }
         else
@@ -102,16 +106,40 @@ public class GameManager : MonoBehaviour
         _resetGameBoard = false;
     }
 
-    public bool MovePlayer(int newX, int newY)
+    public void MovePlayer(int newX, int newY)
     {
         if  (newX < 0 || newY < 0 || newX >= _gridSize || newY >= _gridSize)
         {
-            return false;
+            return;
         }
         
         _playerOneRef.SetPosition(newX, newY);
+    }
 
-        return true;
+    //Changes the color of grid tiles in-front of the player to match that player's color
+    public void PlayerAction_ColorLine(GamePlayer.FacingDirection fDirection, GamePlayer playerRef)
+    {
+        int x = fDirection == GamePlayer.FacingDirection.Left  ? 1 : fDirection == GamePlayer.FacingDirection.Right ? -1 : 0;
+        int y = fDirection == GamePlayer.FacingDirection.Down  ? 1 : fDirection == GamePlayer.FacingDirection.Up    ? -1 : 0;
+
+        float colorChangeDelay = 0.0f;
+        
+        if (x != 0)
+        {
+            for (int i = playerRef.positionX + x; i < _gridSize && i >= 0; i += x)
+            {
+                _gameBoardTiles[i, playerRef.positionY].LerpToColor(playerRef.playerColor, _colorChangeSpeed, colorChangeDelay);
+                colorChangeDelay += 0.1f;
+            }
+        }
+        else if (y != 0)
+        {
+            for (int i = playerRef.positionY + y; i < _gridSize && i >= 0; i += y)
+            {
+                _gameBoardTiles[playerRef.positionX, i].LerpToColor(playerRef.playerColor, _colorChangeSpeed, colorChangeDelay);
+                colorChangeDelay += 0.1f;
+            }
+        }
     }
 
 }
