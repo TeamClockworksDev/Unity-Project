@@ -60,6 +60,8 @@ public class GameBoardTileData : MonoBehaviour
 
     public void LerpToColor(Color c, float lerpTime, float delay = 0.0f, bool fallingEnabled = false)
     {
+        if (!active) return;
+        
         colorLerpTime = lerpTime;
         colorLerpDelay = delay;
         active = !fallingEnabled;

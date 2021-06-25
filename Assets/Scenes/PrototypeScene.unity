@@ -304,7 +304,7 @@ MonoBehaviour:
   basicGridColor2: {r: 0, g: 0, b: 0, a: 1}
   _colorChangeSpeed: 1
   _resetGameBoard: 0
-  _enableFallingBlocks: 0
+  _enableFallingBlocks: 1
 --- !u!4 &1528020080
 Transform:
   m_ObjectHideFlags: 0
