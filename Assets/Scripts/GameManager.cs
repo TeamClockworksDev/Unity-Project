@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Dev Tools")]
     [SerializeField] private bool _resetGameBoard;
+    [SerializeField] private bool _enableFallingBlocks;
 
     private GameBoardTileData[,] _gameBoardTiles;
     private GameObject _playerOneGO;
@@ -112,8 +113,11 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-        
-        _playerOneRef.SetPosition(newX, newY);
+
+        if (_gameBoardTiles[newX, newY].active)
+        {
+            _playerOneRef.SetPosition(newX, newY);
+        }
     }
 
     //Changes the color of grid tiles in-front of the player to match that player's color
@@ -128,7 +132,7 @@ public class GameManager : MonoBehaviour
         {
             for (int i = playerRef.positionX + x; i < _gridSize && i >= 0; i += x)
             {
-                _gameBoardTiles[i, playerRef.positionY].LerpToColor(playerRef.playerColor, _colorChangeSpeed, colorChangeDelay);
+                _gameBoardTiles[i, playerRef.positionY].LerpToColor(playerRef.playerColor, _colorChangeSpeed, colorChangeDelay, _enableFallingBlocks);
                 colorChangeDelay += 0.1f;
             }
         }
@@ -136,7 +140,7 @@ public class GameManager : MonoBehaviour
         {
             for (int i = playerRef.positionY + y; i < _gridSize && i >= 0; i += y)
             {
-                _gameBoardTiles[playerRef.positionX, i].LerpToColor(playerRef.playerColor, _colorChangeSpeed, colorChangeDelay);
+                _gameBoardTiles[playerRef.positionX, i].LerpToColor(playerRef.playerColor, _colorChangeSpeed, colorChangeDelay, _enableFallingBlocks);
                 colorChangeDelay += 0.1f;
             }
         }

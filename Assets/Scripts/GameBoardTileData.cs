@@ -9,9 +9,11 @@ public class GameBoardTileData : MonoBehaviour
 
     [Header("Tile Status")]
     public bool  active = true;
-    public Color currentColor  = Color.gray;
+    [Space]
     public int coordinatesX = -1;
     public int coordinatesY = -1;
+    [Space]
+    public Color currentColor  = Color.gray;
     
     private Renderer _renderer;
     private GameObject _gameObjectRef;
@@ -56,10 +58,11 @@ public class GameBoardTileData : MonoBehaviour
         }
     }
 
-    public void LerpToColor(Color c, float lerpTime, float delay = 0.0f)
+    public void LerpToColor(Color c, float lerpTime, float delay = 0.0f, bool fallingEnabled = false)
     {
         colorLerpTime = lerpTime;
         colorLerpDelay = delay;
+        active = !fallingEnabled;
         
         StartCoroutine("LerpToNewColor", c);
     }
@@ -72,6 +75,8 @@ public class GameBoardTileData : MonoBehaviour
         Color startColor = currentColor;
         float elapsedTime = 0.0f;
 
+        
+        //Change Color
         while (elapsedTime <= colorLerpTime)
         {
             SetColor(Color.Lerp(startColor, endColor, elapsedTime / colorLerpTime));
@@ -79,6 +84,23 @@ public class GameBoardTileData : MonoBehaviour
             elapsedTime += Time.deltaTime;
             
             yield return new WaitForEndOfFrame();
+        }
+        
+        //Fade Away (In place of falling, for now.)
+        if (!active && elapsedTime > 0)
+        {
+            elapsedTime = 0.0f;
+
+            while (elapsedTime <= colorLerpTime)
+            {
+                endColor.a = 1 - (elapsedTime / colorLerpTime);
+                
+                SetColor(endColor);
+
+                elapsedTime += Time.deltaTime;
+            
+                yield return new WaitForEndOfFrame();
+            }
         }
 
         SetColor(endColor);
