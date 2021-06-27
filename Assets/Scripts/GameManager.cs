@@ -29,10 +29,13 @@ public class GameManager : MonoBehaviour
     public Color basicGridColor2 = Color.black;
     
     [SerializeField] private float _colorChangeSpeed = 1.5f;
-
+    
+    [Space]
+    [SerializeField] private bool _enableFallingBlocks;
+    [SerializeField] private float _fallBackCountdown = 3.0f;
+    
     [Header("Dev Tools")]
     [SerializeField] private bool _resetGameBoard;
-    [SerializeField] private bool _enableFallingBlocks;
 
     private GameBoardTileData[,] _gameBoardTiles;
     private GameObject _playerOneGO;
@@ -132,7 +135,7 @@ public class GameManager : MonoBehaviour
         {
             for (int i = playerRef.positionX + x; i < _gridSize && i >= 0; i += x)
             {
-                _gameBoardTiles[i, playerRef.positionY].LerpToColor(playerRef.playerColor, _colorChangeSpeed, colorChangeDelay, _enableFallingBlocks);
+                _gameBoardTiles[i, playerRef.positionY].FallAwayToColor(playerRef.playerColor, _colorChangeSpeed, colorChangeDelay, _enableFallingBlocks, _fallBackCountdown);
                 colorChangeDelay += 0.1f;
             }
         }
@@ -140,7 +143,7 @@ public class GameManager : MonoBehaviour
         {
             for (int i = playerRef.positionY + y; i < _gridSize && i >= 0; i += y)
             {
-                _gameBoardTiles[playerRef.positionX, i].LerpToColor(playerRef.playerColor, _colorChangeSpeed, colorChangeDelay, _enableFallingBlocks);
+                _gameBoardTiles[playerRef.positionX, i].FallAwayToColor(playerRef.playerColor, _colorChangeSpeed, colorChangeDelay, _enableFallingBlocks, _fallBackCountdown);
                 colorChangeDelay += 0.1f;
             }
         }
