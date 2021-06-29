@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +19,14 @@ public class GamePlayer : MonoBehaviour
     public int positionX = -1;
     public int positionY = -1;
     
+    [Space]
+    [Range(0, 3)]
+    public  float   movementSpeed = 0.35f;
+    private bool    _isMoving;
+    private Vector3 _oldPosition;
+    private Vector3 _newPosition;
+    private float   _movingLerpValue;
+    
     [Header("Movement Keys")]
     [SerializeField] private KeyCode movementKeyUp    = KeyCode.W;
     [SerializeField] private KeyCode movementKeyDown  = KeyCode.S;
@@ -36,18 +45,25 @@ public class GamePlayer : MonoBehaviour
 
     void Start()
     {
-        // GetComponentInChildren<Renderer>().material.color = playerColor;
+        GetComponentInChildren<MeshRenderer>().material.color = playerColor;
         GetComponentInChildren<Light>().color = playerColor;
     }
 
-    void Update()
+    private void Update()
     {
-        DetectMovement();
-        DetectAction();
+        DetectMovementInput();
+        DetectActionInput();
+
+        DoSlowMovement();
     }
 
-    private void DetectMovement()
+    private void DetectMovementInput()
     {
+        if (_isMoving)
+        {
+            return;
+        }
+
         int moveX = 0;
         int moveY = 0;
         
@@ -80,7 +96,7 @@ public class GamePlayer : MonoBehaviour
         GameManager.Instance.MovePlayer(positionX + moveX, positionY + moveY);
     }
 
-    private void DetectAction()
+    private void DetectActionInput()
     {
         if (Input.GetKeyDown(actionKey1) || Input.GetKeyDown(actionKey2))
         {
@@ -92,8 +108,12 @@ public class GamePlayer : MonoBehaviour
     {
         positionX = x;
         positionY = y;
+
+        _isMoving = true;
+        _movingLerpValue = 0.0f;
         
-        gameObject.transform.localPosition = new Vector3(x, 0.5f, y);
+        _newPosition = new Vector3(x, 0.5f, y);
+        _oldPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, transform.localPosition.z);
     }
 
     public void SetRotation(FacingDirection fDir)
@@ -111,5 +131,24 @@ public class GamePlayer : MonoBehaviour
         facing = fDir;
         
         transform.eulerAngles = new Vector3(0.0f, rotationNewY, 0.0f);
+    }
+
+    private void DoSlowMovement()
+    {
+        if (_isMoving)
+        {
+            _movingLerpValue += Time.deltaTime;
+
+            if (_movingLerpValue >= movementSpeed)
+            {
+                gameObject.transform.localPosition = _newPosition;
+                _isMoving = false;
+            }
+            else
+            {
+                float lerpVal = _movingLerpValue / movementSpeed;
+                gameObject.transform.localPosition = Vector3.Lerp(_oldPosition, _newPosition, lerpVal);
+            }
+        }
     }
 }

@@ -192,6 +192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerColor: {r: 1, g: 0, b: 0, a: 1}
+  movementSpeed: 0.35
   facing: 3
   positionX: -1
   positionY: -1
@@ -203,4 +204,5 @@ MonoBehaviour:
   altMovementKeyDown: 274
   altMovementKeyLeft: 276
   altMovementKeyRight: 275
-  actionKey: 122
+  actionKey1: 122
+  actionKey2: 32
