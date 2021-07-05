@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.4465934, g: 0.49642956, b: 0.5748249, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -302,9 +302,11 @@ MonoBehaviour:
   _playerOneSpawnPosition: 0
   basicGridColor1: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   basicGridColor2: {r: 0, g: 0, b: 0, a: 1}
+  colorChangeOpacity: 0.8
   _colorChangeSpeed: 1
-  _resetGameBoard: 0
   _enableFallingBlocks: 1
+  _fallBackCountdown: 6
+  _resetGameBoard: 0
 --- !u!4 &1528020080
 Transform:
   m_ObjectHideFlags: 0

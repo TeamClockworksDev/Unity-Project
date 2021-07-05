@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     
     public Color basicGridColor1 = Color.gray;
     public Color basicGridColor2 = Color.black;
+    [Range(0, 1)]
+    public float colorChangeOpacity = 0.8f;
     
     [SerializeField] private float _colorChangeSpeed = 1.5f;
     
@@ -135,7 +137,7 @@ public class GameManager : MonoBehaviour
         {
             for (int i = playerRef.positionX + x; i < _gridSize && i >= 0; i += x)
             {
-                _gameBoardTiles[i, playerRef.positionY].FallAwayToColor(playerRef.playerColor, _colorChangeSpeed, colorChangeDelay, _enableFallingBlocks, _fallBackCountdown);
+                _gameBoardTiles[i, playerRef.positionY].FallAwayToColor(playerRef.playerColor, _colorChangeSpeed, colorChangeOpacity, colorChangeDelay, _enableFallingBlocks, _fallBackCountdown);
                 colorChangeDelay += 0.1f;
             }
         }
@@ -143,10 +145,9 @@ public class GameManager : MonoBehaviour
         {
             for (int i = playerRef.positionY + y; i < _gridSize && i >= 0; i += y)
             {
-                _gameBoardTiles[playerRef.positionX, i].FallAwayToColor(playerRef.playerColor, _colorChangeSpeed, colorChangeDelay, _enableFallingBlocks, _fallBackCountdown);
+                _gameBoardTiles[playerRef.positionX, i].FallAwayToColor(playerRef.playerColor, _colorChangeSpeed, colorChangeOpacity, colorChangeDelay, _enableFallingBlocks, _fallBackCountdown);
                 colorChangeDelay += 0.1f;
             }
         }
     }
-
 }
